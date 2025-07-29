@@ -1,41 +1,32 @@
-# import re
-
-# BANNED_KEYWORDS = [
-#     "nude", "naked", "sex", "sexy", "porn", "erotic", "nudes", "fetish", "orgy", "genitals",
-#     "boobs", "penis", "vagina", "strip", "kamasutra", "bdsm", "breasts", "nipple", "nips",
-
-#     "gun", "kill", "murder", "blood", "knife", "weapon", "shoot", "bomb", "explosion", "war",
-#     "sniper", "bullet", "execute", "stab", "assassinate", "hostage", "terrorist", "violence",
-
-#     "drug", "cocaine", "heroin", "ecstasy", "meth", "overdose", "suicide", "hang", "cut myself",
-#     "bleed", "self harm", "inject", "addict", "narcotic", "alcoholic",
-
-#     "nazi", "hitler", "kkk", "slave", "lynch", "racist", "homophobe", "transphobe", "islamophobe",
-#     "bigot", "discriminate", "misogynist", "sexist", "rape", "incest", "pedophile",
-
-#     "child porn", "pedo", "bestiality", "abuse", "molest", "torture"
-# ]
-
-# def is_prompt_safe(prompt: str) -> bool:
-#     prompt = prompt.lower()
-#     for word in BANNED_KEYWORDS:
-#         if re.search(rf"\b{re.escape(word)}\b", prompt):
-#             return False
-#     return True
-
+# Importation de la bibliothèque Hugging Face Transformers
 from transformers import pipeline
 
-# Charge une pipeline de classification de toxicité
+# Chargement d'une pipeline de classification de toxicité basée sur le modèle 'unitary/toxic-bert'
+# Cette pipeline prend un texte et retourne une liste de scores associés à différents types de toxicité
 toxic_classifier = pipeline("text-classification", model="unitary/toxic-bert", top_k=None)
 
+# Liste des labels considérés comme inappropriés (à surveiller)
+UNSAFE_LABELS = {
+    "toxic", "obscene", "insult", "threat",
+    "identity_attack", "identity_hate", "severe_toxic", "sexual_explicit"
+}
+
+# Fonction qui vérifie si un prompt est sûr en détectant les labels toxiques avec un score élevé
 def is_prompt_safe(prompt: str, threshold: float = 0.5) -> bool:
-    """Vérifie si le prompt est non toxique selon un modèle sémantique."""
     try:
+        # Application de la pipeline de classification sur le prompt
         results = toxic_classifier(prompt)
-        for result in results:
-            if result['label'].lower() == 'toxic' and result['score'] >= threshold:
-                return False
-        return True
+        print(results)  # Affichage des résultats pour débogage
+
+        # Analyse des résultats retournés pour le premier (et unique) texte
+        for result in results[0]:  
+            # Si le label est considéré comme dangereux ET dépasse le seuil défini
+            if result['label'].lower() in UNSAFE_LABELS and result['score'] >= threshold:
+                return False  # Prompt considéré comme dangereux
+
+        return True  # Aucun score toxique détecté au-dessus du seuil, prompt accepté
+
     except Exception as e:
+        # En cas d'erreur dans le modèle (connexion, format, etc.), rejeter le prompt par sécurité
         print(f"⚠️ Erreur dans la détection de toxicité : {e}")
-        return False 
+        return False
