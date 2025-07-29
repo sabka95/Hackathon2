@@ -71,7 +71,7 @@ Le pipeline inclut un module simple pour détecter les mots-clés interdits (vio
 
 ## 📌 Auteurs & Contributeurs
 
-- Jean Pierre Rugina (Concepteur & développeur du pipeline)
+- Sabri Kaci & Jean Pierre Rugina (Concepteur & développeur du pipeline)
 - Basé sur des modèles open-source de Hugging Face, Microsoft, et la communauté IA
 
 ---
@@ -86,4 +86,4 @@ Le pipeline inclut un module simple pour détecter les mots-clés interdits (vio
 
 ## 📄 Licence
 
-Projet open-source sous licence MIT.
+Projet open-source sous licence caléidoscope.
