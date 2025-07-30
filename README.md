@@ -1,5 +1,7 @@
 # 🎨 Text-to-Image Generator
 
+demonstration video du projet : https://www.loom.com/share/adcbd8e36f474a6088c8493eb5674c99?sid=99b9ec97-12a6-4545-b14a-1e76dd009b56
+
 Ce projet est une application **Streamlit** qui génère des images à partir de descriptions textuelles (**prompts**) en utilisant un modèle de génération (comme **Stable Diffusion**). Il inclut des modules d'enrichissement, de filtrage, d'évaluation, et une interface interactive pour améliorer l'expérience utilisateur.
 
 ## 🚀 Fonctionnalités principales
